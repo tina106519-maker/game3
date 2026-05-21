@@ -1,0 +1,2263 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>時光偵探:消失的黃金地基 | 因材國</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Noto+Serif+TC:wght@400;600;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d1b2a;
+    --ink-2: #1b263b;
+    --parchment: #f4ead5;
+    --parchment-2: #e8dcc0;
+    --gold: #d4a24c;
+    --gold-bright: #f0c060;
+    --crimson: #8b2635;
+    --teal: #2d5d6e;
+    --emerald: #4a7c59;
+    --emerald-bright: #6ba17a;
+    --error: #c0392b;
+    --star-red: #e74c3c;
+    --star-green: #4a7c59;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Serif TC', 'Cormorant Garamond', serif;
+    background: var(--ink);
+    color: var(--parchment);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(2px 2px at 20% 30%, rgba(244,234,213,0.4), transparent),
+      radial-gradient(1px 1px at 60% 70%, rgba(244,234,213,0.3), transparent),
+      radial-gradient(2px 2px at 80% 10%, rgba(212,162,76,0.5), transparent),
+      radial-gradient(1px 1px at 30% 80%, rgba(244,234,213,0.4), transparent),
+      radial-gradient(1.5px 1.5px at 70% 40%, rgba(212,162,76,0.3), transparent),
+      radial-gradient(1px 1px at 15% 60%, rgba(244,234,213,0.2), transparent),
+      radial-gradient(2px 2px at 90% 85%, rgba(244,234,213,0.5), transparent);
+    pointer-events: none;
+    z-index: 0;
+    animation: twinkle 8s ease-in-out infinite;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse at top, rgba(45, 93, 110, 0.3) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(139, 38, 53, 0.15) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(212,162,76,0.3);
+    margin-bottom: 32px;
+  }
+
+  .logo { display: flex; align-items: center; gap: 12px; }
+
+  .logo-mark {
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700; font-size: 18px;
+  }
+
+  .logo-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em;
+    color: rgba(244,234,213,0.7);
+    text-transform: uppercase;
+  }
+
+  .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.15em;
+    color: rgba(244,234,213,0.5);
+    text-transform: uppercase;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 24px 0 40px;
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.4em;
+    color: var(--gold); text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 900;
+    font-size: clamp(36px, 6vw, 64px);
+    line-height: 1.05;
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-title .accent {
+    color: var(--gold);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    color: rgba(244,234,213,0.65);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* 進度條 */
+  .progress {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin: 40px 0 48px;
+  }
+
+  .stage {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 8px;
+    opacity: 0.4;
+    transition: opacity 0.3s;
+    cursor: default;
+  }
+
+  .stage.active { opacity: 1; }
+  .stage.done { opacity: 0.85; }
+
+  .stage-num {
+    width: 44px; height: 44px;
+    border: 1.5px solid var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--gold);
+    background: var(--ink);
+    position: relative;
+  }
+
+  .stage.active .stage-num {
+    background: var(--gold);
+    color: var(--ink);
+    box-shadow: 0 0 24px rgba(240,192,96,0.4);
+  }
+
+  .stage.done .stage-num::after {
+    content: '✓';
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--emerald);
+    color: var(--parchment);
+    border-radius: 50%;
+  }
+
+  .stage-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em;
+    color: rgba(244,234,213,0.6);
+    text-transform: uppercase;
+  }
+
+  .stage-divider {
+    width: 60px; height: 1px;
+    background: rgba(212,162,76,0.3);
+    align-self: center; margin-top: -16px;
+  }
+
+  /* 道具收集區 */
+  .inventory {
+    display: flex; gap: 12px;
+    justify-content: center;
+    margin-bottom: 32px;
+    min-height: 40px;
+  }
+
+  .inv-item {
+    padding: 6px 14px;
+    border: 1px solid var(--gold);
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.15em;
+    color: var(--gold);
+    text-transform: uppercase;
+    background: rgba(212,162,76,0.08);
+    animation: invPop 0.5s ease-out;
+  }
+
+  @keyframes invPop {
+    from { transform: scale(0.6); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* 卡片 */
+  .case-file {
+    background: var(--parchment);
+    color: var(--ink);
+    border-radius: 4px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(212,162,76,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .case-file::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 50%, var(--gold) 100%);
+  }
+
+  .case-stamp {
+    position: absolute;
+    top: 24px; right: 24px;
+    border: 2px solid var(--crimson);
+    color: var(--crimson);
+    padding: 6px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+    transform: rotate(8deg);
+    opacity: 0.85;
+  }
+
+  .case-body { padding: 48px 56px 56px; }
+
+  @media (max-width: 600px) {
+    .case-body { padding: 36px 24px 40px; }
+    .case-stamp { top: 18px; right: 18px; font-size: 9px; padding: 4px 10px; }
+  }
+
+  .case-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.3em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .case-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 900;
+    font-size: 32px;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .case-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--teal);
+    margin-bottom: 32px;
+  }
+
+  .narrative {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--ink-2);
+    margin-bottom: 32px;
+    padding: 20px 24px;
+    border-left: 3px solid var(--gold);
+    background: rgba(212,162,76,0.08);
+  }
+
+  .narrative .quote-mark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    color: var(--gold);
+    line-height: 0;
+    position: relative;
+    top: 14px;
+    margin-right: 4px;
+  }
+
+  .narrative strong { color: var(--ink); }
+
+  /* === 第一關 === */
+  .lock-section { margin: 40px 0 24px; }
+
+  .lock-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.25em;
+    color: var(--teal); text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .lock-label::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(212,162,76,0.25);
+  }
+
+  .equation {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 5vw, 44px);
+    text-align: center;
+    padding: 32px 16px;
+    background: var(--ink);
+    color: var(--parchment);
+    border-radius: 2px;
+    margin-bottom: 24px;
+    letter-spacing: 0.05em;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .equation::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(212,162,76,0.03) 20px, rgba(212,162,76,0.03) 21px);
+    pointer-events: none;
+  }
+
+  .eq-num { color: var(--gold-bright); font-weight: 600; }
+  .eq-op { color: rgba(244,234,213,0.5); margin: 0 12px; }
+  .eq-eq { color: var(--gold); margin: 0 16px; }
+
+  .answer-blank {
+    display: inline-block;
+    min-width: 80px;
+    padding: 4px 16px;
+    border-bottom: 3px solid var(--gold);
+    color: var(--gold-bright);
+    text-align: center;
+    font-weight: 700;
+  }
+
+  .hint-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 500px) {
+    .hint-cards { grid-template-columns: 1fr; }
+  }
+
+  .hint-card {
+    background: var(--parchment-2);
+    padding: 16px 18px;
+    border-radius: 2px;
+    border-left: 2px solid var(--teal);
+  }
+
+  .hint-card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.25em;
+    color: var(--teal); text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .hint-card-content {
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+
+  .keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    max-width: 280px;
+    margin: 0 auto 24px;
+  }
+
+  .key {
+    aspect-ratio: 1;
+    border: 1.5px solid var(--ink);
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.15s;
+  }
+
+  .key:hover {
+    background: var(--ink);
+    color: var(--parchment);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .key:active { transform: translateY(0); }
+
+  .key.special {
+    font-size: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.1em;
+  }
+
+  .key.submit {
+    background: var(--gold);
+    color: var(--ink);
+    border-color: var(--gold);
+  }
+
+  .key.submit:hover {
+    background: var(--ink);
+    color: var(--gold);
+  }
+
+  .input-display {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; font-weight: 600;
+    color: var(--ink);
+    margin: 16px 0;
+    min-height: 36px;
+    letter-spacing: 0.1em;
+  }
+
+  .input-display .cursor {
+    display: inline-block;
+    width: 2px; height: 24px;
+    background: var(--gold);
+    margin-left: 4px;
+    vertical-align: middle;
+    animation: blink 1s infinite;
+  }
+
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  /* === 第二關:星空 === */
+  .starfield-container {
+    background: var(--ink);
+    border-radius: 2px;
+    padding: 24px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .starfield-container::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: 
+      radial-gradient(1px 1px at 10% 20%, rgba(244,234,213,0.4), transparent),
+      radial-gradient(1px 1px at 30% 80%, rgba(244,234,213,0.3), transparent),
+      radial-gradient(2px 2px at 50% 50%, rgba(212,162,76,0.2), transparent),
+      radial-gradient(1px 1px at 80% 30%, rgba(244,234,213,0.4), transparent),
+      radial-gradient(1px 1px at 90% 70%, rgba(244,234,213,0.3), transparent);
+    pointer-events: none;
+  }
+
+  .captain-panel {
+    position: relative;
+    z-index: 1;
+    background: rgba(212,162,76,0.1);
+    border: 1px solid rgba(212,162,76,0.3);
+    border-radius: 2px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+
+  .captain-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .captain-text {
+    font-size: 13px;
+    color: var(--parchment);
+    line-height: 1.5;
+  }
+
+  .captain-text strong { color: var(--gold-bright); }
+
+  .star-grid {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 600px) {
+    .star-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .star-cell {
+    background: rgba(244,234,213,0.05);
+    border: 1px solid rgba(244,234,213,0.15);
+    border-radius: 2px;
+    padding: 16px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .star-cell:hover {
+    background: rgba(244,234,213,0.1);
+    transform: translateY(-2px);
+  }
+
+  .star-cell.selected {
+    border-color: var(--gold);
+    background: rgba(212,162,76,0.15);
+    box-shadow: 0 0 16px rgba(212,162,76,0.3);
+  }
+
+  .star-cell.done {
+    cursor: default;
+    border-color: var(--emerald);
+    background: rgba(74,124,89,0.1);
+  }
+
+  .star-cell.done:hover { transform: none; }
+
+  .star-svg {
+    width: 48px; height: 48px;
+    margin: 0 auto 8px;
+    display: block;
+    transition: all 0.4s;
+  }
+
+  .star-cell .star-svg path {
+    fill: var(--star-red);
+    filter: drop-shadow(0 0 8px rgba(231,76,60,0.6));
+    transition: all 0.4s;
+  }
+
+  .star-cell.done .star-svg path {
+    fill: var(--emerald-bright);
+    filter: drop-shadow(0 0 12px rgba(107,161,122,0.8));
+  }
+
+  .star-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--parchment);
+  }
+
+  .pie-tray-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.25em;
+    color: var(--teal); text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .pie-tray-label::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(212,162,76,0.25);
+  }
+
+  .pie-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 600px) {
+    .pie-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .pie-cell {
+    background: var(--parchment-2);
+    border: 1.5px solid var(--ink);
+    border-radius: 2px;
+    padding: 16px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.4;
+  }
+
+  .pie-cell.active {
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  .pie-cell.active:hover {
+    background: var(--ink);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .pie-cell.active:hover .pie-label { color: var(--parchment); }
+
+  .pie-svg {
+    width: 60px; height: 60px;
+    margin: 0 auto 8px;
+    display: block;
+  }
+
+  .pie-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    color: var(--ink-2);
+    font-style: italic;
+  }
+
+  .star-progress {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--teal);
+    margin-bottom: 16px;
+  }
+
+  .star-progress strong { color: var(--ink); font-size: 14px; }
+
+  /* === 第三關:寶藏門 === */
+  .door-container {
+    background: linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 100%);
+    border-radius: 2px;
+    padding: 32px 24px;
+    margin-bottom: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .door-svg {
+    width: 180px; height: 240px;
+    margin: 0 auto 24px;
+    display: block;
+  }
+
+  .door-inscription {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--gold-bright);
+    margin-bottom: 8px;
+  }
+
+  .door-inscription-tc {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15px;
+    color: rgba(244,234,213,0.8);
+    letter-spacing: 0.05em;
+  }
+
+  .word-problem {
+    background: var(--parchment-2);
+    padding: 24px;
+    border-radius: 2px;
+    border-left: 3px solid var(--gold);
+    margin-bottom: 24px;
+  }
+
+  .word-problem-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.3em;
+    color: var(--crimson);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .word-problem-text {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--ink);
+  }
+
+  .word-problem-text strong {
+    background: var(--gold);
+    padding: 0 4px;
+    color: var(--ink);
+  }
+
+  .answer-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 500px) {
+    .answer-row { grid-template-columns: 1fr; }
+  }
+
+  .answer-box {
+    background: var(--parchment-2);
+    padding: 18px;
+    border-radius: 2px;
+    border: 1.5px solid var(--ink);
+  }
+
+  .answer-box-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .answer-box-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    border-bottom: 2px solid var(--ink);
+    padding: 6px 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    text-align: center;
+    outline: none;
+  }
+
+  .answer-box-hint {
+    font-size: 12px;
+    color: rgba(13,27,42,0.5);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  .door-submit {
+    width: 100%;
+    padding: 16px;
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 700;
+  }
+
+  .door-submit:hover {
+    background: var(--ink);
+    color: var(--gold);
+  }
+
+  /* 訊息回饋 */
+  .feedback {
+    min-height: 0;
+    padding: 0;
+    transition: all 0.3s;
+    margin-top: 16px;
+  }
+
+  .feedback.show {
+    padding: 20px 24px;
+    background: var(--ink);
+    color: var(--parchment);
+    border-radius: 2px;
+    margin-bottom: 16px;
+    border-left: 3px solid var(--gold);
+  }
+
+  .feedback.error { border-left-color: var(--error); }
+  .feedback.success { border-left-color: var(--emerald); }
+
+  .feedback-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .sprite-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-bright) 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    box-shadow: 0 0 16px rgba(240,192,96,0.5);
+    animation: float 2s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .sprite-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .feedback-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(244,234,213,0.95);
+  }
+
+  .feedback-text strong { color: var(--gold-bright); }
+
+  /* 過關畫面 */
+  .victory {
+    display: none;
+    text-align: center;
+    padding: 24px 0;
+  }
+
+  .victory.show { display: block; animation: fadeUp 0.6s ease-out; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reward-icon {
+    width: 120px; height: 120px;
+    margin: 24px auto;
+    position: relative;
+    animation: spin 8s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .reward-icon svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 0 24px rgba(240,192,96,0.6));
+  }
+
+  .victory-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .victory-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--teal);
+    margin-bottom: 24px;
+  }
+
+  .reflection {
+    background: var(--parchment-2);
+    padding: 24px;
+    border-radius: 2px;
+    text-align: left;
+    margin: 24px 0;
+  }
+
+  .reflection-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--crimson);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .reflection-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+
+  .reflection-text strong { color: var(--ink); }
+
+  .continue-btn {
+    margin-top: 24px;
+    padding: 14px 36px;
+    background: var(--ink);
+    border: 1.5px solid var(--gold);
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .continue-btn:hover {
+    background: var(--gold);
+    color: var(--ink);
+  }
+
+  /* 最終勳章 */
+  .medal-container {
+    width: 180px; height: 180px;
+    margin: 24px auto;
+    position: relative;
+  }
+
+  .medal-container svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 0 32px rgba(240,192,96,0.7));
+    animation: medalPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes medalPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .confetti {
+    position: fixed;
+    top: -10px;
+    width: 8px; height: 8px;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  /* 動畫 */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+
+  .shake { animation: shake 0.4s; }
+
+  @keyframes flash {
+    0%, 100% { box-shadow: 0 0 0 rgba(74,124,89,0); }
+    50% { box-shadow: 0 0 40px rgba(74,124,89,0.8); }
+  }
+
+  .flash { animation: flash 0.8s; }
+
+  /* 教學者註記 */
+  .teacher-note {
+    margin-top: 40px;
+    padding: 24px;
+    border: 1px dashed rgba(212,162,76,0.4);
+    border-radius: 2px;
+  }
+
+  .teacher-note-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .teacher-note-content {
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(244,234,213,0.75);
+  }
+
+  .teacher-note-content strong { color: var(--gold-bright); }
+
+  .restart-all-btn {
+    margin: 32px auto 0;
+    display: block;
+    padding: 10px 24px;
+    background: transparent;
+    border: 1px solid rgba(244,234,213,0.3);
+    color: rgba(244,234,213,0.6);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .restart-all-btn:hover {
+    background: rgba(244,234,213,0.05);
+    color: var(--parchment);
+    border-color: var(--gold);
+  }
+
+  /* 通用關卡切換 */
+  .puzzle-stage { display: none; }
+  .puzzle-stage.active { display: block; animation: fadeUp 0.5s ease-out; }
+
+  /* ===== 難度選擇畫面 ===== */
+  #difficulty-screen {
+    position: fixed; inset: 0;
+    background: var(--ink);
+    z-index: 999;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    padding: 24px;
+  }
+
+  #difficulty-screen.hidden { display: none; }
+
+  .diff-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.4em;
+    color: var(--gold); text-transform: uppercase;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .diff-title {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 900;
+    font-size: clamp(28px, 5vw, 48px);
+    text-align: center;
+    margin-bottom: 6px;
+    line-height: 1.15;
+  }
+
+  .diff-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: rgba(244,234,213,0.6);
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .diff-cards {
+    display: flex; gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 760px;
+  }
+
+  .diff-card {
+    background: rgba(244,234,213,0.04);
+    border: 1.5px solid rgba(212,162,76,0.3);
+    border-radius: 4px;
+    padding: 28px 24px;
+    width: 220px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .diff-card:hover {
+    border-color: var(--gold);
+    background: rgba(212,162,76,0.08);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+  }
+
+  .diff-card.selected {
+    border-color: var(--gold-bright);
+    background: rgba(212,162,76,0.14);
+    box-shadow: 0 0 32px rgba(240,192,96,0.25);
+  }
+
+  .diff-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .diff-icon {
+    font-size: 36px;
+    margin-bottom: 14px;
+    display: block;
+    filter: drop-shadow(0 0 8px rgba(212,162,76,0.5));
+  }
+
+  .diff-name {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 900;
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: var(--parchment);
+  }
+
+  .diff-desc {
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(244,234,213,0.6);
+    margin-bottom: 16px;
+  }
+
+  .diff-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    justify-content: center;
+  }
+
+  .diff-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border: 1px solid rgba(212,162,76,0.3);
+    border-radius: 20px;
+    color: rgba(244,234,213,0.5);
+  }
+
+  .diff-start-btn {
+    margin-top: 40px;
+    padding: 16px 56px;
+    background: var(--gold);
+    color: var(--ink);
+    border: none;
+    border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.35em;
+    text-transform: uppercase;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .diff-start-btn.ready {
+    opacity: 1; pointer-events: auto;
+  }
+
+  .diff-start-btn.ready:hover {
+    background: var(--parchment);
+  }
+
+  /* 音效開關按鈕 */
+  #sound-toggle {
+    position: fixed;
+    top: 16px; right: 16px;
+    z-index: 1000;
+    background: rgba(13,27,42,0.85);
+    border: 1px solid rgba(212,162,76,0.4);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.15em;
+    color: var(--gold);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+  }
+
+  #sound-toggle:hover { border-color: var(--gold); }
+  #sound-toggle.active { display: flex; align-items: center; gap: 6px; }
+
+  /* 難度標籤 */
+  .difficulty-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .difficulty-badge.easy { background: rgba(74,124,89,0.2); color: var(--emerald-bright); border: 1px solid var(--emerald); }
+  .difficulty-badge.normal { background: rgba(212,162,76,0.15); color: var(--gold); border: 1px solid var(--gold); }
+  .difficulty-badge.hard { background: rgba(139,38,53,0.2); color: #e06070; border: 1px solid var(--crimson); }
+
+  /* 計時器（挑戰模式） */
+  #timer-bar {
+    height: 4px;
+    background: rgba(212,162,76,0.15);
+    border-radius: 2px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    display: none;
+  }
+
+  #timer-bar.active { display: block; }
+
+  #timer-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 100%);
+    transition: width 1s linear, background 0.5s;
+    width: 100%;
+  }
+
+  #timer-fill.warning { background: linear-gradient(90deg, var(--crimson) 0%, #e06070 100%); }
+</style>
+</head>
+<body>
+<!-- 音效開關 -->
+<button id="sound-toggle" class="active">🔊 <span id="sound-label">音效開</span></button>
+
+<!-- 難度選擇畫面 -->
+<div id="difficulty-screen">
+  <div class="diff-eyebrow">DETECTIVE BUREAU · 因材偵探局</div>
+  <h1 class="diff-title">時光偵探<br><span style="color:var(--gold);font-family:'Cormorant Garamond',serif;font-style:italic;">消失的黃金地基</span></h1>
+  <p class="diff-subtitle">選擇你的偵探難度</p>
+
+  <div class="diff-cards">
+    <div class="diff-card" data-diff="easy">
+      <div class="diff-badge">LEVEL 01</div>
+      <span class="diff-icon">🔍</span>
+      <div class="diff-name">初探偵探</div>
+      <div class="diff-desc">題目固定、提示豐富，適合第一次挑戰的新手偵探。</div>
+      <div class="diff-tags">
+        <span class="diff-tag">固定題目</span>
+        <span class="diff-tag">充足提示</span>
+        <span class="diff-tag">無時間限制</span>
+      </div>
+    </div>
+
+    <div class="diff-card" data-diff="normal">
+      <div class="diff-badge">LEVEL 02</div>
+      <span class="diff-icon">🕵️</span>
+      <div class="diff-name">標準偵探</div>
+      <div class="diff-desc">題目隨機變化，第一關、第三關數字每次不同，考驗真實理解。</div>
+      <div class="diff-tags">
+        <span class="diff-tag">隨機題目</span>
+        <span class="diff-tag">3次提示</span>
+        <span class="diff-tag">無時間限制</span>
+      </div>
+    </div>
+
+    <div class="diff-card" data-diff="hard">
+      <div class="diff-badge">LEVEL 03</div>
+      <span class="diff-icon">⚡</span>
+      <div class="diff-name">挑戰偵探</div>
+      <div class="diff-desc">隨機題目 + 90秒計時，第二關加入干擾選項，測試你的快速判斷。</div>
+      <div class="diff-tags">
+        <span class="diff-tag">隨機題目</span>
+        <span class="diff-tag">90秒計時</span>
+        <span class="diff-tag">干擾選項</span>
+      </div>
+    </div>
+  </div>
+
+  <button class="diff-start-btn" id="diff-start-btn">→ 開始偵查</button>
+</div>
+
+<div class="container">
+
+  <header class="header">
+    <div class="logo">
+      <div class="logo-mark">因</div>
+      <div class="logo-text">YINCAI · DETECTIVE BUREAU</div>
+    </div>
+    <div class="meta">CASE NO. 04 / 縱貫診斷</div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-eyebrow">A DIAGNOSTIC ADVENTURE</div>
+    <h1 class="hero-title">時光偵探<br><span class="accent">消失的黃金地基</span></h1>
+    <p class="hero-sub">學問大樓開始搖晃,四年級的寶藏門打不開了——<br>因為地基裡有幾塊「黃金拼圖」掉進了時光裂縫。</p>
+  </section>
+
+  <div class="progress">
+    <div class="stage active" id="stage-1">
+      <div class="stage-num">I</div>
+      <div class="stage-label">G2 · 時光裂縫</div>
+    </div>
+    <div class="stage-divider"></div>
+    <div class="stage" id="stage-2">
+      <div class="stage-num">II</div>
+      <div class="stage-label">G3 · 記憶迷宮</div>
+    </div>
+    <div class="stage-divider"></div>
+    <div class="stage" id="stage-3">
+      <div class="stage-num">III</div>
+      <div class="stage-label">G4 · 寶藏門</div>
+    </div>
+  </div>
+
+  <div class="inventory" id="inventory"></div>
+  <div id="timer-bar"><div id="timer-fill"></div></div>
+
+  <article class="case-file" id="case-file">
+    <div class="case-stamp">CLASSIFIED · 機密</div>
+    <div class="case-body">
+
+      <!-- ===== 第一關 ===== -->
+      <div class="puzzle-stage active" id="puzzle-1">
+        <div class="case-eyebrow">CHAPTER ONE · 二年級區</div>
+        <h2 class="case-title">時光裂縫的線索</h2>
+        <p class="case-subtitle">A clue hidden between addition and multiplication.</p>
+
+        <div class="narrative">
+          <span class="quote-mark">"</span>偵探,你來得正好。牆上有一組密碼鎖,刻著一道古老的算式。
+          二年級的小孩曾經知道答案,但這把鑰匙的密碼,藏在「連加法」變成「乘法」的瞬間裡。
+          解開它,你就能拿到通往三年級的<strong>乘法之鑰</strong>。
+        </div>
+
+        <div class="lock-section">
+          <div class="lock-label">PUZZLE 01 — 解開密碼鎖</div>
+
+          <div class="equation">
+            <span class="eq-num">2</span><span class="eq-op">+</span><span class="eq-num">2</span><span class="eq-op">+</span><span class="eq-num">2</span><span class="eq-op">+</span><span class="eq-num">2</span>
+            <span class="eq-eq">=</span>
+            <span class="eq-num">2</span><span class="eq-op">×</span><span class="answer-blank" id="answer-display">?</span>
+          </div>
+
+          <div class="hint-cards">
+            <div class="hint-card">
+              <div class="hint-card-label">LINE 01 / 你看到什麼?</div>
+              <div class="hint-card-content">四個「2」相加在一起。每一個 2 是一份。</div>
+            </div>
+            <div class="hint-card">
+              <div class="hint-card-label">LINE 02 / 乘法的意思</div>
+              <div class="hint-card-content">2 × ? 就是「2 出現了幾次」。</div>
+            </div>
+          </div>
+
+          <div class="input-display" id="input-display"><span class="cursor"></span></div>
+
+          <div class="keypad">
+            <button class="key" data-num="1">1</button>
+            <button class="key" data-num="2">2</button>
+            <button class="key" data-num="3">3</button>
+            <button class="key" data-num="4">4</button>
+            <button class="key" data-num="5">5</button>
+            <button class="key" data-num="6">6</button>
+            <button class="key" data-num="7">7</button>
+            <button class="key" data-num="8">8</button>
+            <button class="key" data-num="9">9</button>
+            <button class="key special" id="clear-btn">CLR</button>
+            <button class="key" data-num="0">0</button>
+            <button class="key submit" id="submit-btn">→</button>
+          </div>
+        </div>
+
+        <div class="feedback" id="feedback-1"></div>
+      </div>
+
+      <!-- 第一關過關 -->
+      <div class="puzzle-stage" id="victory-1">
+        <div class="case-eyebrow" style="color: var(--emerald);">PUZZLE 01 SOLVED</div>
+
+        <div class="reward-icon">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="gold-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f0c060"/>
+                <stop offset="100%" stop-color="#d4a24c"/>
+              </linearGradient>
+            </defs>
+            <circle cx="32" cy="50" r="18" fill="none" stroke="url(#gold-grad-1)" stroke-width="4"/>
+            <circle cx="32" cy="50" r="6" fill="url(#gold-grad-1)"/>
+            <rect x="48" y="46" width="42" height="8" fill="url(#gold-grad-1)"/>
+            <rect x="74" y="54" width="4" height="10" fill="url(#gold-grad-1)"/>
+            <rect x="82" y="54" width="4" height="14" fill="url(#gold-grad-1)"/>
+            <text x="32" y="56" text-anchor="middle" font-family="serif" font-size="16" font-weight="700" fill="#0d1b2a">×</text>
+          </svg>
+        </div>
+
+        <h2 class="victory-title">獲得:乘法之鑰</h2>
+        <p class="victory-sub">The Key of Multiplication</p>
+
+        <div class="reflection">
+          <div class="reflection-label">DETECTIVE'S NOTE · 偵探筆記</div>
+          <p class="reflection-text">
+            你發現了嗎?<strong>2+2+2+2</strong> 跟 <strong>2×4</strong> 其實是同一件事。
+            乘法,就是把「一直加同一個數」這件事,寫得更短。<br><br>
+            這是你找回的<strong>第一塊黃金拼圖</strong>。地基發出微光,通往三年級的門打開了……
+          </p>
+        </div>
+
+        <button class="continue-btn" data-next="2">前往第二關 →</button>
+      </div>
+
+      <!-- ===== 第二關 ===== -->
+      <div class="puzzle-stage" id="puzzle-2">
+        <div class="case-eyebrow">CHAPTER TWO · 三年級區</div>
+        <h2 class="case-title">記憶迷宮</h2>
+        <p class="case-subtitle">Four red stars in a memory sky. Match them to bring them back.</p>
+
+        <div class="narrative">
+          <span class="quote-mark">"</span>偵探,記憶迷宮裡有<strong>四顆紅色的星星</strong>,每一顆都是被遺忘的分數。
+          你要把每顆星星<strong>配對到正確的圓餅圖</strong>,讓紅星變綠星。<br><br>
+          別忘了,你是<strong>偵探小隊長</strong>。星星太多時,可以決定「先解哪一顆」——這就是<strong>指派任務</strong>的能力。
+        </div>
+
+        <div class="starfield-container">
+          <div class="captain-panel">
+            <div class="captain-icon">隊</div>
+            <div class="captain-text">
+              <strong>隊長指派 ›</strong> 點選一顆紅色星星,指派它為下一個任務。
+              <span id="captain-status">(尚未指派)</span>
+            </div>
+          </div>
+
+          <div class="star-progress">配對進度:<strong id="star-progress">0 / 4</strong></div>
+
+          <div class="star-grid" id="star-grid">
+            <!-- JS render -->
+          </div>
+
+          <div class="pie-tray-label">PIE CHART TRAY — 圓餅圖配對盤</div>
+          <div class="pie-grid" id="pie-grid">
+            <!-- JS render -->
+          </div>
+        </div>
+
+        <div class="feedback" id="feedback-2"></div>
+      </div>
+
+      <!-- 第二關過關 -->
+      <div class="puzzle-stage" id="victory-2">
+        <div class="case-eyebrow" style="color: var(--emerald);">PUZZLE 02 SOLVED</div>
+
+        <div class="reward-icon">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="green-grad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#a8d5b4"/>
+                <stop offset="60%" stop-color="#6ba17a"/>
+                <stop offset="100%" stop-color="#4a7c59"/>
+              </radialGradient>
+            </defs>
+            <circle cx="50" cy="50" r="28" fill="url(#green-grad)" opacity="0.9"/>
+            <circle cx="50" cy="50" r="38" fill="none" stroke="#6ba17a" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="38" cy="42" r="2" fill="#f4ead5"/>
+            <circle cx="58" cy="38" r="1.5" fill="#f4ead5"/>
+            <circle cx="62" cy="58" r="2.5" fill="#f4ead5"/>
+            <circle cx="42" cy="60" r="1.8" fill="#f4ead5"/>
+            <circle cx="50" cy="50" r="2" fill="#f4ead5"/>
+          </svg>
+        </div>
+
+        <h2 class="victory-title">獲得:綠色星光粉</h2>
+        <p class="victory-sub">The Green Stardust</p>
+
+        <div class="reflection">
+          <div class="reflection-label">DETECTIVE'S NOTE · 偵探筆記</div>
+          <p class="reflection-text">
+            你發現了嗎?<strong>1/4 是「一個東西分成 4 份,拿其中 1 份」</strong>。
+            分數不是奇怪的符號,而是<strong>「分東西」的記法</strong>。<br><br>
+            而你剛剛當隊長指派任務——這正是<strong>因材網「指派功能」</strong>背後的概念:
+            知道每個人的拼圖在哪、誰該補哪一塊。<br><br>
+            第二塊黃金拼圖補上了。前方,就是<strong>四年級的寶藏門</strong>。
+          </p>
+        </div>
+
+        <button class="continue-btn" data-next="3">前往最終關 →</button>
+      </div>
+
+      <!-- ===== 第三關 ===== -->
+      <div class="puzzle-stage" id="puzzle-3">
+        <div class="case-eyebrow">CHAPTER THREE · 四年級區</div>
+        <h2 class="case-title">四年級寶藏門</h2>
+        <p class="case-subtitle">Only those who recover the past can open the future.</p>
+
+        <div class="door-container">
+          <svg class="door-svg" viewBox="0 0 180 240" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="door-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#d4a24c"/>
+                <stop offset="100%" stop-color="#8b6914"/>
+              </linearGradient>
+            </defs>
+            <!-- 門框 -->
+            <rect x="20" y="20" width="140" height="210" fill="none" stroke="url(#door-grad)" stroke-width="3"/>
+            <!-- 門板 -->
+            <rect x="30" y="30" width="120" height="190" fill="#1b263b" stroke="url(#door-grad)" stroke-width="1.5"/>
+            <!-- 上方裝飾 -->
+            <path d="M 30 60 L 90 50 L 150 60" fill="none" stroke="url(#door-grad)" stroke-width="1.5"/>
+            <!-- 鎖環 -->
+            <circle cx="90" cy="130" r="22" fill="none" stroke="url(#door-grad)" stroke-width="3"/>
+            <circle cx="90" cy="130" r="6" fill="url(#door-grad)"/>
+            <!-- 符文 -->
+            <text x="90" y="95" text-anchor="middle" font-family="serif" font-size="14" fill="#d4a24c" opacity="0.7">×</text>
+            <text x="70" y="175" text-anchor="middle" font-family="serif" font-size="14" fill="#d4a24c" opacity="0.7">¼</text>
+            <text x="110" y="175" text-anchor="middle" font-family="serif" font-size="14" fill="#d4a24c" opacity="0.7">?</text>
+            <!-- 微光 -->
+            <circle cx="90" cy="130" r="34" fill="none" stroke="#f0c060" stroke-width="0.5" opacity="0.4">
+              <animate attributeName="r" values="22;40;22" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.6;0.1;0.6" dur="3s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+          <div class="door-inscription">"Only those who recover the past can open the future."</div>
+          <div class="door-inscription-tc">「只有找回過去拼圖的人,才能開啟未來的門。」</div>
+        </div>
+
+        <div class="word-problem">
+          <div class="word-problem-label">FINAL CASE · 綜合應用題</div>
+          <p class="word-problem-text">
+            寶藏箱裡有 <strong>12 顆糖果</strong>,要平分給 <strong>4 位偵探</strong>。<br><br>
+            ① 每位偵探可以拿到全部糖果的<strong>幾分之幾</strong>?<br>
+            ② 每位偵探實際拿到<strong>幾顆糖果</strong>?
+          </p>
+        </div>
+
+        <div class="answer-row">
+          <div class="answer-box">
+            <div class="answer-box-label">① 每人占的分數</div>
+            <input type="text" class="answer-box-input" id="ans-fraction" placeholder="例:1/2" autocomplete="off">
+            <div class="answer-box-hint">格式:分子/分母</div>
+          </div>
+          <div class="answer-box">
+            <div class="answer-box-label">② 每人幾顆糖果</div>
+            <input type="number" class="answer-box-input" id="ans-count" placeholder="?" autocomplete="off">
+            <div class="answer-box-hint">填入整數</div>
+          </div>
+        </div>
+
+        <button class="door-submit" id="door-submit">→ 開啟寶藏門</button>
+
+        <div class="feedback" id="feedback-3"></div>
+      </div>
+
+      <!-- 最終勝利 -->
+      <div class="puzzle-stage" id="victory-3">
+        <div class="case-eyebrow" style="color: var(--crimson);">★ CASE CLOSED · 全部破解 ★</div>
+
+        <div class="medal-container">
+          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="medal-grad" cx="50%" cy="40%" r="60%">
+                <stop offset="0%" stop-color="#fff5d6"/>
+                <stop offset="40%" stop-color="#f0c060"/>
+                <stop offset="100%" stop-color="#8b6914"/>
+              </radialGradient>
+              <linearGradient id="ribbon-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#c0392b"/>
+                <stop offset="100%" stop-color="#7a2419"/>
+              </linearGradient>
+            </defs>
+            <!-- 緞帶 -->
+            <path d="M 70 20 L 70 90 L 100 110 L 130 90 L 130 20 Z" fill="url(#ribbon-grad)"/>
+            <path d="M 70 90 L 60 105 L 75 100 Z" fill="#5c1810"/>
+            <path d="M 130 90 L 140 105 L 125 100 Z" fill="#5c1810"/>
+            <!-- 勳章主體 -->
+            <circle cx="100" cy="130" r="55" fill="url(#medal-grad)" stroke="#8b6914" stroke-width="2"/>
+            <!-- 外圈裝飾 -->
+            <circle cx="100" cy="130" r="48" fill="none" stroke="#8b6914" stroke-width="1" opacity="0.6"/>
+            <!-- 星形圖案 -->
+            <path d="M 100 100 L 108 122 L 130 122 L 113 135 L 119 156 L 100 144 L 81 156 L 87 135 L 70 122 L 92 122 Z" 
+                  fill="#8b6914" opacity="0.8"/>
+            <!-- 中央字 -->
+            <text x="100" y="138" text-anchor="middle" font-family="serif" font-size="18" font-weight="700" fill="#f4ead5">偵</text>
+            <!-- 光環 -->
+            <circle cx="100" cy="130" r="60" fill="none" stroke="#f0c060" stroke-width="1" opacity="0.4">
+              <animate attributeName="r" values="55;70;55" dur="2s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+
+        <h2 class="victory-title">榮譽偵探勳章</h2>
+        <p class="victory-sub">Master Detective of Yincai · 因材國一級偵探</p>
+
+        <div class="reflection">
+          <div class="reflection-label">FINAL NOTE · 大樓重新發光</div>
+          <p class="reflection-text">
+            偵探,你做到了。學問大樓不再搖晃,因為你找回了<strong>三塊黃金拼圖</strong>:<br><br>
+            🔑 <strong>乘法之鑰</strong>(二年級):連加 = 乘法<br>
+            ✦ <strong>綠色星光粉</strong>(三年級):分數就是「分一份」<br>
+            🚪 <strong>寶藏門鑰匙</strong>(四年級):用前面的拼圖,解出新問題<br><br>
+            這就是<strong>縱貫診斷</strong>的全部:當你遇到困難,真正的答案<strong>不在這一頁</strong>,
+            而在<strong>前面那幾頁地基</strong>裡。回去找,你就能繼續往前走。
+          </p>
+        </div>
+
+        <p style="font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--teal); margin-top: 24px;">
+          🏆 虛擬代幣 +100 &nbsp;|&nbsp; 榮譽勳章 ×1 &nbsp;|&nbsp; 拼圖收集 3/3
+        </p>
+      </div>
+
+    </div>
+  </article>
+
+  <button class="restart-all-btn" id="restart-all">↻ 重新開始全部關卡</button>
+
+  <div class="teacher-note">
+    <div class="teacher-note-label">DESIGN NOTES · 給教學者</div>
+    <div class="teacher-note-content">
+      本作對應「<strong>因材網縱貫診斷</strong>」三層概念:<br>
+      ▸ <strong>第一關(G2 連加→乘法)</strong>:診斷起點。答錯由 e 度精靈提供遞進式提示,模擬「找出最底層卡關點」。<br>
+      ▸ <strong>第二關(G3 分數配對)</strong>:導入「<strong>指派任務</strong>」機制。學生扮演隊長,自選順序解題,呼應真實課堂中老師指派診斷任務的流程。<br>
+      ▸ <strong>第三關(G4 綜合應用)</strong>:強迫整合前兩關概念(乘法 + 分數),體現「先補地基才能開未來門」的核心訊息。<br><br>
+      <strong>核心教學語言</strong>:三關都用「黃金拼圖」隱喻,讓「為什麼要回頭學」這件抽象的事變成可視覺化的任務。
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ========== 音效系統 (Web Audio API) ==========
+  let audioCtx = null;
+  let soundEnabled = true;
+
+  function getAudioCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return audioCtx;
+  }
+
+  function playTone(freq, type, dur, vol = 0.3, delay = 0) {
+    if (!soundEnabled) return;
+    try {
+      const ctx = getAudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+      gain.gain.setValueAtTime(0, ctx.currentTime + delay);
+      gain.gain.linearRampToValueAtTime(vol, ctx.currentTime + delay + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + dur);
+      osc.start(ctx.currentTime + delay);
+      osc.stop(ctx.currentTime + delay + dur + 0.05);
+    } catch(e) {}
+  }
+
+  function playKeyClick() {
+    playTone(440, 'sine', 0.06, 0.15);
+  }
+
+  function playError() {
+    playTone(180, 'sawtooth', 0.3, 0.2);
+    playTone(140, 'sawtooth', 0.25, 0.15, 0.15);
+  }
+
+  function playSuccess() {
+    // 上升音階
+    [523, 659, 784, 1047].forEach((f, i) => playTone(f, 'sine', 0.3, 0.25, i * 0.1));
+  }
+
+  function playVictory() {
+    // 勝利旋律
+    const melody = [523,523,523,415,523,622,523,0,392,392,392,349,392,466,392];
+    melody.forEach((f, i) => { if (f > 0) playTone(f, 'sine', 0.25, 0.3, i * 0.12); });
+    // 配上和弦
+    [261, 329, 392].forEach(f => playTone(f, 'sine', 1.5, 0.1, 0));
+  }
+
+  function playStarMatch() {
+    playTone(659, 'sine', 0.15, 0.2);
+    playTone(880, 'sine', 0.2, 0.2, 0.1);
+  }
+
+  function playConfetti() {
+    [523,659,784,1047,1319].forEach((f, i) => playTone(f, 'sine', 0.4, 0.2, i * 0.08));
+  }
+
+  document.getElementById('sound-toggle').addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    document.getElementById('sound-label').textContent = soundEnabled ? '音效開' : '音效關';
+    document.getElementById('sound-toggle').innerHTML = (soundEnabled ? '🔊' : '🔇') + ' <span id="sound-label">' + (soundEnabled ? '音效開' : '音效關') + '</span>';
+    if (soundEnabled) playKeyClick();
+  });
+
+  // ========== 難度系統 ==========
+  let difficulty = null; // 'easy' | 'normal' | 'hard'
+  let timerInterval = null;
+  let timerSeconds = 90;
+
+  const DIFF_CONFIGS = {
+    easy: {
+      p1Pools: [{ num: 2, times: 4, answer: 4 }], // 固定
+      p2Stars: 4, p2Decoys: 0,
+      p3Pools: [{ total: 12, people: 4, fraction: '1/4', fVal: 0.25, candy: 3 }], // 固定
+      timer: false
+    },
+    normal: {
+      p1Pools: [
+        { num: 2, times: 4, answer: 4 }, { num: 3, times: 3, answer: 3 },
+        { num: 4, times: 5, answer: 5 }, { num: 5, times: 3, answer: 3 },
+        { num: 2, times: 6, answer: 6 }, { num: 3, times: 4, answer: 4 },
+        { num: 6, times: 3, answer: 3 }, { num: 7, times: 2, answer: 2 }
+      ],
+      p2Stars: 4, p2Decoys: 0,
+      p3Pools: [
+        { total: 12, people: 4, fraction: '1/4', fVal: 0.25, candy: 3 },
+        { total: 15, people: 5, fraction: '1/5', fVal: 0.2, candy: 3 },
+        { total: 18, people: 6, fraction: '1/6', fVal: 1/6, candy: 3 },
+        { total: 12, people: 3, fraction: '1/3', fVal: 1/3, candy: 4 },
+        { total: 20, people: 4, fraction: '1/4', fVal: 0.25, candy: 5 },
+        { total: 16, people: 4, fraction: '1/4', fVal: 0.25, candy: 4 }
+      ],
+      timer: false
+    },
+    hard: {
+      p1Pools: [
+        { num: 6, times: 7, answer: 7 }, { num: 7, times: 8, answer: 8 },
+        { num: 8, times: 9, answer: 9 }, { num: 9, times: 6, answer: 6 },
+        { num: 6, times: 8, answer: 8 }, { num: 7, times: 6, answer: 6 },
+        { num: 8, times: 7, answer: 7 }, { num: 9, times: 8, answer: 8 }
+      ],
+      p2Stars: 4, p2Decoys: 2, // 加干擾圓餅
+      p3Pools: [
+        { total: 24, people: 6, fraction: '1/6', fVal: 1/6, candy: 4 },
+        { total: 35, people: 7, fraction: '1/7', fVal: 1/7, candy: 5 },
+        { total: 24, people: 8, fraction: '1/8', fVal: 0.125, candy: 3 },
+        { total: 45, people: 9, fraction: '1/9', fVal: 1/9, candy: 5 },
+        { total: 32, people: 8, fraction: '1/8', fVal: 0.125, candy: 4 }
+      ],
+      timer: true
+    }
+  };
+
+  // 難度卡片選擇
+  document.querySelectorAll('.diff-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.diff-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      difficulty = card.dataset.diff;
+      document.getElementById('diff-start-btn').classList.add('ready');
+      playKeyClick();
+    });
+  });
+
+  document.getElementById('diff-start-btn').addEventListener('click', () => {
+    if (!difficulty) return;
+    playSuccess();
+    document.getElementById('difficulty-screen').classList.add('hidden');
+    initGame();
+  });
+
+  // ========== 初始化遊戲 ==========
+  function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  function initGame() {
+    const cfg = DIFF_CONFIGS[difficulty];
+
+    // 第一關隨機
+    const p1pick = pickRandom(cfg.p1Pools);
+
+    // 第三關隨機
+    const p3pick = pickRandom(cfg.p3Pools);
+
+    // 第二關星星（hard 多 decoys）
+    const baseStars = [
+      { id: 's1', label: '1/4', value: 0.25 },
+      { id: 's2', label: '1/2', value: 0.5 },
+      { id: 's3', label: '3/4', value: 0.75 },
+      { id: 's4', label: '2/3', value: 2/3 }
+    ];
+    let basePies = [
+      { id: 'p1', value: 0.25 },
+      { id: 'p2', value: 0.5 },
+      { id: 'p3', value: 0.75 },
+      { id: 'p4', value: 2/3 }
+    ];
+
+    // Hard: 加兩個干擾圓餅圖
+    if (difficulty === 'hard') {
+      basePies.push({ id: 'pd1', value: 1/3, decoy: true });
+      basePies.push({ id: 'pd2', value: 0.6, decoy: true });
+    }
+
+    game.p1 = { input: '', attempts: 0, answer: p1pick.answer, num: p1pick.num, times: p1pick.times };
+    game.p2 = {
+      selectedStar: null, matched: [], attempts: 0,
+      stars: baseStars.sort(() => Math.random() - 0.5),
+      pies: basePies.sort(() => Math.random() - 0.5)
+    };
+    game.p3 = { attempts: 0, pick: p3pick };
+
+    // 更新 DOM：第一關題目
+    updateP1Display();
+
+    // 更新第三關題目
+    updateP3Display();
+
+    // 顯示難度標籤
+    const badgeClass = difficulty === 'easy' ? 'easy' : difficulty === 'normal' ? 'normal' : 'hard';
+    const badgeName = difficulty === 'easy' ? '初探' : difficulty === 'normal' ? '標準' : '挑戰';
+    document.querySelector('.hero-eyebrow').innerHTML =
+      'A DIAGNOSTIC ADVENTURE <span class="difficulty-badge ' + badgeClass + '">' + badgeName + '偵探</span>';
+
+    // 計時器（hard）
+    if (cfg.timer) {
+      startTimer();
+    }
+
+    // 初始化 keypad display
+    p1controller.updateInput();
+  }
+
+  function updateP1Display() {
+    const { num, times } = game.p1;
+    // 重建等式：num + num + ... = num × ?
+    const addParts = Array(times).fill(`<span class="eq-num">${num}</span>`).join('<span class="eq-op">+</span>');
+    document.querySelector('.equation').innerHTML = addParts +
+      `<span class="eq-eq">=</span><span class="eq-num">${num}</span><span class="eq-op">×</span><span class="answer-blank" id="answer-display">?</span>`;
+
+    // 更新提示卡
+    const cards = document.querySelectorAll('.hint-card-content');
+    if (cards[0]) cards[0].textContent = `${times} 個「${num}」相加在一起。每一個 ${num} 是一份。`;
+    if (cards[1]) cards[1].textContent = `${num} × ? 就是「${num} 出現了幾次」。`;
+  }
+
+  function updateP3Display() {
+    const p = game.p3.pick;
+    const wpEl = document.querySelector('.word-problem-text');
+    if (wpEl) {
+      wpEl.innerHTML = `寶藏箱裡有 <strong>${p.total} 顆糖果</strong>，要平分給 <strong>${p.people} 位偵探</strong>。<br><br>
+        ① 每位偵探可以拿到全部糖果的<strong>幾分之幾</strong>？<br>
+        ② 每位偵探實際拿到<strong>幾顆糖果</strong>？`;
+    }
+  }
+
+  // ========== 計時器 ==========
+  function startTimer() {
+    timerSeconds = 90;
+    const bar = document.getElementById('timer-bar');
+    const fill = document.getElementById('timer-fill');
+    bar.classList.add('active');
+    fill.style.width = '100%';
+    fill.classList.remove('warning');
+
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      const pct = (timerSeconds / 90) * 100;
+      fill.style.width = pct + '%';
+      if (timerSeconds <= 20) fill.classList.add('warning');
+      if (timerSeconds <= 0) {
+        clearInterval(timerInterval);
+        timeUp();
+      }
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+  }
+
+  function timeUp() {
+    playError();
+    const activeStage = document.querySelector('.puzzle-stage.active');
+    if (!activeStage) return;
+    const feedbackId = 'feedback-' + (activeStage.id.split('-')[1] || '1');
+    showFeedback(feedbackId, 'error', 'TIMER · 時間到',
+      '⏰ 時間耗盡！',
+      '90秒的挑戰結束了。挑戰偵探不服輸——按「重新開始」再試一次！');
+  }
+
+  // ========== 全域狀態 ==========
+  const game = {
+    stage: 1,
+    items: [],
+    p1: { input: '', attempts: 0, answer: 4, num: 2, times: 4 },
+    p2: { selectedStar: null, matched: [], attempts: 0, stars: [], pies: [] },
+    p3: { attempts: 0, pick: { total: 12, people: 4, fraction: '1/4', fVal: 0.25, candy: 3 } }
+  };
+
+  // ========== 工具 ==========
+  const caseFile = document.getElementById('case-file');
+  const inventory = document.getElementById('inventory');
+
+  function shakeCase() {
+    caseFile.classList.add('shake');
+    setTimeout(() => caseFile.classList.remove('shake'), 400);
+  }
+
+  function flashCase() {
+    caseFile.classList.add('flash');
+    setTimeout(() => caseFile.classList.remove('flash'), 800);
+  }
+
+  function showFeedback(targetId, type, name, title, text) {
+    const fb = document.getElementById(targetId);
+    fb.className = 'feedback show ' + type;
+    fb.innerHTML = `
+      <div class="feedback-header">
+        <div class="sprite-avatar">${type === 'success' ? '✦' : '✶'}</div>
+        <div class="sprite-name">${name}</div>
+      </div>
+      <div class="feedback-text"><strong>${title}</strong><br>${text}</div>
+    `;
+  }
+
+  function clearFeedback(targetId) {
+    const fb = document.getElementById(targetId);
+    fb.className = 'feedback';
+    fb.innerHTML = '';
+  }
+
+  function switchStage(id) {
+    document.querySelectorAll('.puzzle-stage').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateProgress(stageNum, state) {
+    for (let i = 1; i <= 3; i++) {
+      const el = document.getElementById('stage-' + i);
+      el.classList.remove('active', 'done');
+    }
+    if (state === 'in') {
+      for (let i = 1; i < stageNum; i++) {
+        document.getElementById('stage-' + i).classList.add('done');
+      }
+      document.getElementById('stage-' + stageNum).classList.add('active');
+    } else if (state === 'all-done') {
+      for (let i = 1; i <= 3; i++) {
+        document.getElementById('stage-' + i).classList.add('done');
+      }
+    }
+  }
+
+  function addInventoryItem(text) {
+    const item = document.createElement('div');
+    item.className = 'inv-item';
+    item.textContent = text;
+    inventory.appendChild(item);
+    game.items.push(text);
+  }
+
+  // ========== 第一關 ==========
+  const p1controller = {
+    get inputDisplay() { return document.getElementById('input-display'); },
+    get answerDisplay() { return document.getElementById('answer-display'); },
+    getHints() {
+      const { num, times } = game.p1;
+      return {
+        1: { t: '咦？好像不太對。', b: `我是 <strong>e度精靈</strong>。別擔心，這就是你消失的第一塊拼圖！<br>👉 試試看：把「${num} 出現了幾次」數一數，左邊算式裡的 ${num} 有幾個？` },
+        2: { t: '我們一起拆解看看。', b: `左邊是 <strong>${Array(times).fill(num).join(' + ')}</strong>，把每一個 ${num} 用手指點一下，數出來是幾個 ${num}？<br>👉 那個數字，就是 ${num} × ? 裡的那個 <strong>?</strong>。` },
+        3: { t: '最後一個線索給你。', b: `答案是 <strong>${times}</strong>。因為左邊有 ${times} 個 ${num} 相加，所以可以寫成 <strong>${num} × ${times}</strong>。<br>👉 試著輸入 ${times}，讓我們繼續冒險。` }
+      };
+    },
+    updateInput() {
+      const inputDisplay = this.inputDisplay;
+      const answerDisplay = this.answerDisplay;
+      if (!inputDisplay) return;
+      if (game.p1.input === '') {
+        inputDisplay.innerHTML = '<span class="cursor"></span>';
+        if (answerDisplay) answerDisplay.textContent = '?';
+      } else {
+        inputDisplay.innerHTML = game.p1.input + '<span class="cursor"></span>';
+        if (answerDisplay) answerDisplay.textContent = game.p1.input;
+      }
+    },
+    submit() {
+      if (game.p1.input === '') return;
+      const guess = parseInt(game.p1.input);
+      if (guess === game.p1.answer) {
+        stopTimer();
+        playSuccess();
+        flashCase();
+        showFeedback('feedback-1', 'success', 'E-DU SPRITE · e度精靈', '✓ 密碼鎖開啟！', '太棒了，偵探！你找回了第一塊黃金拼圖。地基正在發光……');
+        setTimeout(() => {
+          addInventoryItem('🔑 乘法之鑰');
+          switchStage('victory-1');
+          if (DIFF_CONFIGS[difficulty].timer) startTimer();
+        }, 1600);
+      } else {
+        game.p1.attempts++;
+        playError();
+        shakeCase();
+        const hints = this.getHints();
+        const h = hints[Math.min(game.p1.attempts, 3)];
+        showFeedback('feedback-1', 'error', 'E-DU SPRITE · e度精靈', h.t, h.b);
+        game.p1.input = '';
+        this.updateInput();
+      }
+    }
+  };
+
+  // 舊名 alias（相容下方程式碼）
+  const p1 = p1controller;
+
+  document.querySelectorAll('.key[data-num]').forEach(key => {
+    key.addEventListener('click', () => {
+      if (game.p1.input.length < 2) {
+        game.p1.input += key.dataset.num;
+        playKeyClick();
+        p1controller.updateInput();
+      }
+    });
+  });
+  document.getElementById('clear-btn').addEventListener('click', () => {
+    playKeyClick();
+    game.p1.input = ''; p1controller.updateInput();
+  });
+  document.getElementById('submit-btn').addEventListener('click', () => p1controller.submit());
+
+  document.addEventListener('keydown', (e) => {
+    if (!document.getElementById('puzzle-1').classList.contains('active')) return;
+    if (/^[0-9]$/.test(e.key)) {
+      if (game.p1.input.length < 2) { game.p1.input += e.key; playKeyClick(); p1controller.updateInput(); }
+    } else if (e.key === 'Backspace') {
+      game.p1.input = game.p1.input.slice(0, -1); p1controller.updateInput();
+    } else if (e.key === 'Enter') { p1controller.submit(); }
+  });
+
+  // ========== 第二關 ==========
+  function renderStarsAndPies() {
+    const starGrid = document.getElementById('star-grid');
+    const pieGrid = document.getElementById('pie-grid');
+    starGrid.innerHTML = '';
+    pieGrid.innerHTML = '';
+
+    // 星星
+    game.p2.stars.forEach(star => {
+      const cell = document.createElement('div');
+      cell.className = 'star-cell';
+      cell.dataset.id = star.id;
+      if (game.p2.matched.includes(star.id)) cell.classList.add('done');
+      cell.innerHTML = `
+        <svg class="star-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2 L14.5 9 L22 9 L16 13.5 L18.5 21 L12 16.5 L5.5 21 L8 13.5 L2 9 L9.5 9 Z"/>
+        </svg>
+        <div class="star-label">${star.label}</div>
+      `;
+      cell.addEventListener('click', () => selectStar(star.id));
+      starGrid.appendChild(cell);
+    });
+
+    // 圓餅圖
+    game.p2.pies.forEach(pie => {
+      const cell = document.createElement('div');
+      cell.className = 'pie-cell';
+      cell.dataset.id = pie.id;
+      cell.dataset.value = pie.value;
+      cell.innerHTML = `
+        ${renderPieSVG(pie.value)}
+        <div class="pie-label">點此配對</div>
+      `;
+      cell.addEventListener('click', () => matchPie(pie));
+      pieGrid.appendChild(cell);
+    });
+  }
+
+  function renderPieSVG(fraction) {
+    // 把 fraction 轉成 SVG arc
+    const cx = 30, cy = 30, r = 26;
+    const angle = fraction * 360;
+    const rad = (angle - 90) * Math.PI / 180;
+    const x = cx + r * Math.cos(rad);
+    const y = cy + r * Math.sin(rad);
+    const largeArc = angle > 180 ? 1 : 0;
+    const path = `M ${cx} ${cy} L ${cx} ${cy - r} A ${r} ${r} 0 ${largeArc} 1 ${x} ${y} Z`;
+    return `
+      <svg class="pie-svg" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30" cy="30" r="26" fill="none" stroke="#1b263b" stroke-width="1.5"/>
+        <path d="${path}" fill="#d4a24c" opacity="0.9"/>
+      </svg>
+    `;
+  }
+
+  function selectStar(starId) {
+    if (game.p2.matched.includes(starId)) return;
+    playKeyClick();
+    game.p2.selectedStar = starId;
+    document.querySelectorAll('.star-cell').forEach(c => {
+      c.classList.remove('selected');
+      if (c.dataset.id === starId && !c.classList.contains('done')) {
+        c.classList.add('selected');
+      }
+    });
+    document.querySelectorAll('.pie-cell').forEach(c => c.classList.add('active'));
+    const star = game.p2.stars.find(s => s.id === starId);
+    document.getElementById('captain-status').textContent = `(已指派:${star.label})`;
+    clearFeedback('feedback-2');
+  }
+
+  function matchPie(pie) {
+    if (!game.p2.selectedStar) {
+      playError();
+      showFeedback('feedback-2', 'error', 'CAPTAIN PANEL · 隊長面板', '請先指派一顆星星', '👉 先點選紅色星星，告訴小隊「下一個要解的是哪一塊」，再來點圓餅圖配對。');
+      return;
+    }
+    if (pie.decoy) {
+      // 干擾選項
+      game.p2.attempts++;
+      playError();
+      shakeCase();
+      showFeedback('feedback-2', 'error', 'E-DU SPRITE · e度精靈', '⚠️ 這是干擾選項！', '挑戰模式加入了額外的圓餅圖，仔細數清楚被分成幾份、塗色幾份再選。');
+      return;
+    }
+    const star = game.p2.stars.find(s => s.id === game.p2.selectedStar);
+    if (Math.abs(star.value - pie.value) < 0.001) {
+      // 配對成功
+      playStarMatch();
+      game.p2.matched.push(star.id);
+      game.p2.selectedStar = null;
+      document.getElementById('captain-status').textContent = '(尚未指派)';
+      document.getElementById('star-progress').textContent = `${game.p2.matched.length} / 4`;
+
+      showFeedback('feedback-2', 'success', 'E-DU SPRITE · e度精靈',
+        `✓ ${star.label} 配對成功！`,
+        `這顆星星變綠了。記得：<strong>${star.label}</strong> 就是「全部分成 ${star.label.split('/')[1]} 份，拿其中 ${star.label.split('/')[0]} 份」。`);
+
+      renderStarsAndPies();
+
+      if (game.p2.matched.length === 4) {
+        setTimeout(() => {
+          stopTimer();
+          playSuccess();
+          flashCase();
+          showFeedback('feedback-2', 'success', 'E-DU SPRITE · e度精靈',
+            '✦ 四顆星星全部變綠了！',
+            '記憶迷宮亮起來了……綠色星光粉正在你的口袋裡發光。');
+          setTimeout(() => {
+            addInventoryItem('✦ 綠色星光粉');
+            switchStage('victory-2');
+            if (DIFF_CONFIGS[difficulty].timer) startTimer();
+          }, 1800);
+        }, 1000);
+      }
+    } else {
+      // 配對失敗
+      game.p2.attempts++;
+      playError();
+      shakeCase();
+      let hint;
+      if (game.p2.attempts <= 2) {
+        hint = `這個圓餅圖不是 <strong>${star.label}</strong>。<br>👉 試著數圓餅圖被分成幾份，塗色的有幾份。`;
+      } else {
+        hint = `提示：<strong>${star.label}</strong> 的意思是，整個圓被分成 <strong>${star.label.split('/')[1]} 等份</strong>，塗色的占 <strong>${star.label.split('/')[0]} 份</strong>。`;
+      }
+      showFeedback('feedback-2', 'error', 'E-DU SPRITE · e度精靈', '咦？顏色對不上。', hint);
+    }
+  }
+
+  // ========== 第三關 ==========
+  function checkFraction(input) {
+    const p = game.p3.pick;
+    const s = input.trim().replace(/\s/g, '');
+    // 接受 "1/4"、"¼"、"0.25" 或等值分數
+    if (s === p.fraction) return true;
+    const m = s.match(/^(\d+)\/(\d+)$/);
+    if (m) {
+      const num = parseInt(m[1]), den = parseInt(m[2]);
+      if (den !== 0 && Math.abs(num/den - p.fVal) < 0.002) return true;
+    }
+    const asNum = parseFloat(s);
+    if (!isNaN(asNum) && Math.abs(asNum - p.fVal) < 0.002) return true;
+    return false;
+  }
+
+  document.getElementById('door-submit').addEventListener('click', () => {
+    const p = game.p3.pick;
+    const f = document.getElementById('ans-fraction').value;
+    const c = document.getElementById('ans-count').value;
+    const fOk = checkFraction(f);
+    const cOk = parseInt(c) === p.candy;
+
+    if (fOk && cOk) {
+      stopTimer();
+      playVictory();
+      flashCase();
+      showFeedback('feedback-3', 'success', 'E-DU SPRITE · e度精靈',
+        '✓✓ 寶藏門開啟！',
+        '兩個答案都對了。地基的最後一塊拼圖嵌進去……大樓重新發光！');
+      setTimeout(() => {
+        addInventoryItem('🚪 寶藏門鑰匙');
+        updateProgress(0, 'all-done');
+        switchStage('victory-3');
+        playConfetti();
+        launchConfetti();
+      }, 2000);
+    } else if (!fOk && !cOk) {
+      game.p3.attempts++;
+      playError();
+      shakeCase();
+      showFeedback('feedback-3', 'error', 'E-DU SPRITE · e度精靈',
+        '兩個答案都需要再想想。',
+        `提示：<br>① <strong>把 ${p.total} 個東西分給 ${p.people} 個人</strong>，每個人得到的<strong>分數</strong>是？（格式：1/${p.people}）<br>② 用乘法逆推：幾乘以 ${p.people} 等於 ${p.total}？`);
+    } else if (!fOk) {
+      game.p3.attempts++;
+      playError();
+      shakeCase();
+      showFeedback('feedback-3', 'error', 'E-DU SPRITE · e度精靈',
+        '① 分數答案還沒對。',
+        `想想：把「全部」分成 ${p.people} 份，每人拿 1 份，那就是<strong>幾分之幾</strong>？<br>👉 格式像 1/${p.people}。`);
+    } else {
+      game.p3.attempts++;
+      playError();
+      shakeCase();
+      showFeedback('feedback-3', 'error', 'E-DU SPRITE · e度精靈',
+        '② 糖果數量還沒對。',
+        `用乘法：<strong>? × ${p.people} = ${p.total}</strong>，? 是多少？<br>👉 那就是每人拿到的糖果顆數。`);
+    }
+  });
+
+  // ========== 慶祝彩帶 ==========
+  function launchConfetti() {
+    const colors = ['#d4a24c', '#f0c060', '#8b2635', '#4a7c59', '#2d5d6e', '#f4ead5'];
+    for (let i = 0; i < 60; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.transform = `rotate(${Math.random() * 360}deg)`;
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+      document.body.appendChild(c);
+      const dur = 2 + Math.random() * 2;
+      const delay = Math.random() * 0.6;
+      c.animate([
+        { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+        { transform: `translateY(110vh) rotate(${720 + Math.random() * 360}deg)`, opacity: 0.7 }
+      ], { duration: dur * 1000, delay: delay * 1000, easing: 'cubic-bezier(0.3, 0.7, 0.4, 1)', fill: 'forwards' });
+      setTimeout(() => c.remove(), (dur + delay) * 1000 + 200);
+    }
+  }
+
+  // ========== 切換關卡按鈕 ==========
+  document.querySelectorAll('.continue-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      playKeyClick();
+      const next = parseInt(btn.dataset.next);
+      game.stage = next;
+      updateProgress(next, 'in');
+      switchStage('puzzle-' + next);
+      if (next === 2) renderStarsAndPies();
+    });
+  });
+
+  // ========== 全部重來 ==========
+  document.getElementById('restart-all').addEventListener('click', () => {
+    if (!confirm('確定要重新開始全部關卡嗎？')) return;
+    stopTimer();
+    location.reload();
+  });
+
+  // ========== 初始化（等難度選擇後才跑） ==========
+  // initGame() 由難度選擇畫面的按鈕觸發
+</script>
+
+</body>
+</html>
